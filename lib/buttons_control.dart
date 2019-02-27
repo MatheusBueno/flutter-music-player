@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttery_audio/fluttery_audio.dart';
+import 'package:music_player/songs.dart';
 import 'dart:math';
 
 import 'package:music_player/theme.dart';
@@ -11,52 +12,59 @@ class PlayerController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: double.infinity,
-        padding: EdgeInsets.only(top: 40, bottom: 50),
-        color: accentColor,
-        child: Material(
-          shadowColor: const Color(0x44000000),
-          color: accentColor,
-          child: Column(
-            children: <Widget>[
-              Column(
+    return AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        String songName = demoPlaylist.songs[playlist.activeIndex].songTitle;
+        String artistName = demoPlaylist.songs[playlist.activeIndex].artist;
+
+        return Container(
+            width: double.infinity,
+            padding: EdgeInsets.only(top: 40, bottom: 50),
+            color: accentColor,
+            child: Material(
+              shadowColor: const Color(0x44000000),
+              color: accentColor,
+              child: Column(
                 children: <Widget>[
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Song Name',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 4,
-                              height: 1.5),
+                  Column(
+                    children: <Widget>[
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: songName.toUpperCase(),
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 3.5,
+                                  height: 1.5),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: 'Artist Name',
-                          style: TextStyle(
-                              color: Colors.white.withOpacity(0.75),
-                              fontSize: 12,
-                              letterSpacing: 3,
-                              height: 1.5),
+                      ),
+                      RichText(
+                        text: TextSpan(
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: artistName,
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.75),
+                                  fontSize: 12,
+                                  letterSpacing: 3,
+                                  height: 1.5),
+                            ),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
+                  new ButtonsController(),
                 ],
               ),
-              new ButtonsController(),
-            ],
-          ),
-        ));
+            ));
+      },
+    );
   }
 }
 
@@ -92,16 +100,18 @@ class PreviousButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      splashColor: lightAccentColor,
-      highlightColor: Colors.transparent,
-      icon: Icon(
-        Icons.skip_previous,
-        color: Colors.white,
-        size: 40,
-      ),
-      onPressed: () {
-        // TODO
+    return AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        return IconButton(
+          splashColor: lightAccentColor,
+          highlightColor: Colors.transparent,
+          icon: Icon(
+            Icons.skip_previous,
+            color: Colors.white,
+            size: 40,
+          ),
+          onPressed: playlist.previous,
+        );
       },
     );
   }
@@ -175,16 +185,18 @@ class NextButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      splashColor: lightAccentColor,
-      highlightColor: Colors.transparent,
-      icon: Icon(
-        Icons.skip_next,
-        color: Colors.white,
-        size: 40,
-      ),
-      onPressed: () {
-        // TODO
+    return AudioPlaylistComponent(
+      playlistBuilder: (BuildContext context, Playlist playlist, Widget child) {
+        return IconButton(
+          splashColor: lightAccentColor,
+          highlightColor: Colors.transparent,
+          icon: Icon(
+            Icons.skip_next,
+            color: Colors.white,
+            size: 40,
+          ),
+          onPressed: playlist.next,
+        );
       },
     );
   }
